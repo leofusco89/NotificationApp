@@ -9,7 +9,7 @@ import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.NotificationCompat
 
-class SecondActivity : AppCompatActivity() , AsyncNotif.OnAsyncNotif {
+class SecondActivity : AppCompatActivity(), AsyncNotif.OnAsyncNotif {
     private lateinit var unNotificationBuilder: NotificationCompat.Builder
     private lateinit var unaNotification: Notification
     private lateinit var unNotificationManager: NotificationManager

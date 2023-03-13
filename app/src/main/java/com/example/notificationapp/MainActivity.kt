@@ -46,11 +46,11 @@ class MainActivity : AppCompatActivity() {
             PendingIntent.FLAG_UPDATE_CURRENT
         )
 
+
         //Creamos la notificación
         val unNotificationBuilder = NotificationCompat.Builder(this, "canal_id_001")
             .setContentTitle("Título: Notificación Activity 1")
             .setContentText("Contenido de notificación Activity 1")
-            .setSmallIcon(R.mipmap.ic_launcher_round) //Ícono
             .setPriority(NotificationCompat.PRIORITY_MAX)
             .setContentIntent(unPendingIntent) //Agregamos redireccionamiento a una activity al clickear
             .addAction(
@@ -65,6 +65,12 @@ class MainActivity : AppCompatActivity() {
                 true
             ) //Esta configuración es para mostrar una barra que actúa como la ruedita de carga, que se vea que está ejecutando algo pero sin mostrar el progreso
             .setOngoing(true) //Evita que el usuario pueda eliminar la notificación deslizándola, si setAutoCancel(true), al clickearla, se elimina igual
+
+        //Asignamos ícono dependiendo de versión
+        unNotificationBuilder.setSmallIcon(R.drawable.ic_notification_icon)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            unNotificationBuilder.color = resources.getColor(R.color.colorPrimary)
+        }
 
         //Obtiene la referencia del servicio del sistema que maneja las notificaciones
         val unNotificationManager =
