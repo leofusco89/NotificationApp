@@ -35,8 +35,7 @@ class MainActivity : AppCompatActivity() {
         unTaskStackBuilder.addNextIntentWithParentStack(unIntent)
 
         //Crear pending intent desde task stack, que como ya tiene un intent asociado, no hace falta pasarlo por parámetro
-        val otroPendingIntent =
-            unTaskStackBuilder.getPendingIntent(1, PendingIntent.FLAG_UPDATE_CURRENT)
+        unTaskStackBuilder.getPendingIntent(1, PendingIntent.FLAG_UPDATE_CURRENT)
 
         //Creamos botón con redireccionamiento a SecondActivity
         val unActionButtonIntent = Intent(this, SecondActivity::class.java)
@@ -49,14 +48,23 @@ class MainActivity : AppCompatActivity() {
 
         //Creamos la notificación
         val unNotificationBuilder = NotificationCompat.Builder(this, "canal_id_001")
-            .setContentTitle("Este es un título")
-            .setContentText("Este es el contenido")
+            .setContentTitle("Título: Notificación Activity 1")
+            .setContentText("Contenido de notificación Activity 1")
             .setSmallIcon(R.mipmap.ic_launcher_round) //Ícono
             .setPriority(NotificationCompat.PRIORITY_MAX)
             .setContentIntent(unPendingIntent) //Agregamos redireccionamiento a una activity al clickear
-            .addAction(0, "Ir a 2° acty.", unActionButtonPendingIntent) //Agregamos opción con acción en notificación
-            .setAutoCancel(true) //Para que la notificación se elimine al ser clickeada
-            .setProgress(0, 0, true) //Esta configuración es para mostrar una barra que actúa como la ruedita de carga, que se vea que está corriendo algo pero sin mostrar el progreso
+            .addAction(
+                0,
+                "Ir a 2° acty.",
+                unActionButtonPendingIntent
+            ) //Agregamos opción con acción en notificación
+//            .setAutoCancel(true) //Para que la notificación se autoelimine al ser clickeada, pero para esta app, vamos a hacerlo manualmente, creando la notificación acá y la eliminamos en la activity 2
+            .setProgress(
+                0,
+                0,
+                true
+            ) //Esta configuración es para mostrar una barra que actúa como la ruedita de carga, que se vea que está ejecutando algo pero sin mostrar el progreso
+            .setOngoing(true) //Evita que el usuario pueda eliminar la notificación deslizándola, si setAutoCancel(true), al clickearla, se elimina igual
 
         //Obtiene la referencia del servicio del sistema que maneja las notificaciones
         val unNotificationManager =
@@ -75,6 +83,10 @@ class MainActivity : AppCompatActivity() {
             unNotificationManager.createNotificationChannel(unNotificationChannel)
         }
 
-        unNotificationManager.notify(1, unNotificationBuilder.build())
+        //De esta manera podemos obtener la notificación por si queremos modificar otros atributos
+        val unNotification = unNotificationBuilder.build()
+
+        //Asignamos un ID a la notificación para que luego, al ser clickeada, la eliminemos en la activity 2
+        unNotificationManager.notify(1, unNotification)
     }
 }

@@ -9,6 +9,6 @@
         android:id="@+id/tv_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Segunda actividad: Al volver, se cargará la activity anterior en la stack que es la principal que mostrará nuevamente la notificación"
+        android:text="Segunda activity:\n\nAl volver, se cargará la activity 1 nuevamente y mostrará de nuevo su notificación"
         android:textSize="40dp" />
 </RelativeLayout>

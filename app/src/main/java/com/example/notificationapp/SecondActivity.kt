@@ -1,5 +1,6 @@
-    package com.example.notificationapp
+package com.example.notificationapp
 
+import android.app.Notification
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.content.Context
@@ -8,29 +9,36 @@ import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.NotificationCompat
 
-class SecondActivity : AppCompatActivity(), AsyncNotif.OnAsyncNotif {
+class SecondActivity : AppCompatActivity() , AsyncNotif.OnAsyncNotif {
     private lateinit var unNotificationBuilder: NotificationCompat.Builder
+    private lateinit var unaNotification: Notification
+    private lateinit var unNotificationManager: NotificationManager
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_second)
 
+        //Obtiene la referencia del servicio del sistema que maneja las notificaciones
+        val unNotificationManager =
+            getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+
+        //Eliminamos la notificación creada en la activity anterior mediante ID
+        unNotificationManager.cancel(1)
+//        unNotificationManager.cancelAll() // En caso de querer eliminar todas las notificaciones
+
         //Creamos la notificación
         unNotificationBuilder = NotificationCompat.Builder(this, "canal_id_001")
-            .setContentTitle("Notif acty 2")
-            .setContentText("Este es el contenido")
+            .setContentTitle("Título: Notificación Activity 2")
+            .setContentText("Contenido de notificación Activity 2")
             .setSmallIcon(R.mipmap.ic_launcher_round) //Ícono
             .setPriority(NotificationCompat.PRIORITY_MAX)
-            .setAutoCancel(true) //Para que la notificación se elimine al ser clickeada
+            .setAutoCancel(true) //Para que la notificación se autoelimine al ser clickeada, al no asignar .setOngoing(true), también puede eliminarla deslizándola
             .setProgress(
                 0,
                 0,
                 true
             ) //Esta configuración es para mostrar una barra que actúa como la ruedita de carga, que se vea que está corriendo algo pero sin mostrar el progreso
-
-        //Obtiene la referencia del servicio del sistema que maneja las notificaciones
-        val unNotificationManager =
-            getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+            .setOnlyAlertOnce(true) //En cada update de la progress bar, la notificación emite sonido e interrumpe al usuario, asignando esto, solo lo hará la primera vez
 
         //Crear canal si no fue creado previamente y si es versión superior a Android 8.0 (Oreo)
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
@@ -45,7 +53,8 @@ class SecondActivity : AppCompatActivity(), AsyncNotif.OnAsyncNotif {
             unNotificationManager.createNotificationChannel(unNotificationChannel)
         }
 
-        unNotificationManager.notify(2, unNotificationBuilder.build())
+        unaNotification = unNotificationBuilder.build()
+        unNotificationManager.notify(2, unaNotification)
 
         //Ejecutamos en este thread el proceso de actualización de la progress bar de la notificación que acabamos de mostrar
         val async = AsyncNotif(this)
